@@ -69,29 +69,32 @@ public class Neo4jGraphDatabase implements GraphDatabase {
 	@Override
 	public void open(String dbPath) {
 		neo4jGraph = new GraphDatabaseFactory().newEmbeddedDatabase(dbPath);		
-		Transaction tx = null;
-		try {
-			tx = ((GraphDatabaseAPI)neo4jGraph).tx().unforced().begin();
+		try (Transaction tx = neo4jGraph.beginTx()) {
 			neo4jGraph.schema().awaitIndexesOnline(10l, TimeUnit.MINUTES);
 			tx.success();
 			tx.close();
 		}
-		catch(Exception e) {
-			
-		}
-		finally {
-			if(tx != null) {
-				tx.close();
-			}
-		}
+//		Transaction tx = null;
+//		try {
+//			tx = ((GraphDatabaseAPI)neo4jGraph).tx().unforced().begin();
+//			neo4jGraph.schema().awaitIndexesOnline(10l, TimeUnit.MINUTES);
+//			tx.success();
+//			tx.close();
+//		}
+//		catch(Exception e) {
+//
+//		}
+//		finally {
+//			if(tx != null) {
+//				tx.close();
+//			}
+//		}
 	}
 
 	@Override
 	public void createGraphForSingleLoad(String dbPath) {
 		neo4jGraph = new GraphDatabaseFactory().newEmbeddedDatabase(dbPath);
-		Transaction tx = null;
-		try {
-			tx = ((GraphDatabaseAPI)neo4jGraph).tx().unforced().begin();
+		try (Transaction tx = neo4jGraph.beginTx()){
 			schema = neo4jGraph.schema();
 			indexDefinition = schema.indexFor(NODE_LABEL).on("nodeId").create();
 			indexDefinition = schema.indexFor(NODE_LABEL).on("community").create();
@@ -99,17 +102,28 @@ public class Neo4jGraphDatabase implements GraphDatabase {
 			tx.success();
 			tx.close();
 		}
-		catch(Exception e) {
-			
-		}
-		finally {
-			if(tx != null) {
-				tx.close();
-			}
-		}
+//		Transaction tx = null;
+//		try {
+//			tx = ((GraphDatabaseAPI)neo4jGraph).tx().unforced().begin();
+//			schema = neo4jGraph.schema();
+//			indexDefinition = schema.indexFor(NODE_LABEL).on("nodeId").create();
+//			indexDefinition = schema.indexFor(NODE_LABEL).on("community").create();
+//			indexDefinition = schema.indexFor(NODE_LABEL).on("nodeCommunity").create();
+//			tx.success();
+//			tx.close();
+//		}
+//		catch(Exception e) {
+//
+//		}
+//		finally {
+//			if(tx != null) {
+//				tx.close();
+//			}
+//		}
 	}
 
 	@Override
+	//TODO: Externalize configuration
 	public void createGraphForMassiveLoad(String dbPath) {
 		Map<String, String> config = new HashMap<String, String>();
 		config.put("cache_type", "none");
@@ -184,30 +198,32 @@ public class Neo4jGraphDatabase implements GraphDatabase {
 	@Override
 	public int getNodeCount() {
 		int nodeCount = 0;
-		Transaction tx = null;
-		try {
-			tx = ((GraphDatabaseAPI)neo4jGraph).tx().unforced().begin();
+		try (Transaction tx = neo4jGraph.beginTx()) {
 			nodeCount = IteratorUtil.count(GlobalGraphOperations.at(neo4jGraph).getAllNodes());
 			tx.success();
+			tx.close();
 		}
-		catch(Exception e) {
-			
-		}
-		finally {
-			if(tx != null) {
-				tx.close();
-			}
-		}
-		
+//		Transaction tx = null;
+//		try {
+//			tx = ((GraphDatabaseAPI)neo4jGraph).tx().unforced().begin();
+//			nodeCount = IteratorUtil.count(GlobalGraphOperations.at(neo4jGraph).getAllNodes());
+//			tx.success();
+//		}
+//		catch(Exception e) {
+//
+//		}
+//		finally {
+//			if(tx != null) {
+//				tx.close();
+//			}
+//		}
 		return nodeCount;
 	}
 
 	@Override
 	public Set<Integer> getNeighborsIds(int nodeId) {
 		Set<Integer> neighbors = new HashSet<Integer>();
-		Transaction tx = null;
-		try {
-			tx = ((GraphDatabaseAPI)neo4jGraph).tx().unforced().begin();
+		try (Transaction tx = neo4jGraph.beginTx()) {
 			Node n = neo4jGraph.findNodesByLabelAndProperty(NODE_LABEL, "nodeId", String.valueOf(nodeId))
 					.iterator().next();
 			for(Relationship relationship : n.getRelationships(RelTypes.SIMILAR, Direction.OUTGOING)) {
@@ -216,39 +232,57 @@ public class Neo4jGraphDatabase implements GraphDatabase {
 				neighbors.add(Integer.valueOf(neighbourId));
 			}
 			tx.success();
+			tx.close();
 		}
-		catch(Exception e) {
-			
-		}
-		finally {
-			if(tx != null) {
-				tx.close();
-			}
-		}
-		
+//		Transaction tx = null;
+//		try {
+//			tx = ((GraphDatabaseAPI)neo4jGraph).tx().unforced().begin();
+//			Node n = neo4jGraph.findNodesByLabelAndProperty(NODE_LABEL, "nodeId", String.valueOf(nodeId))
+//					.iterator().next();
+//			for(Relationship relationship : n.getRelationships(RelTypes.SIMILAR, Direction.OUTGOING)) {
+//				Node neighbour = relationship.getOtherNode(n);
+//				String neighbourId = (String)neighbour.getProperty("nodeId");
+//				neighbors.add(Integer.valueOf(neighbourId));
+//			}
+//			tx.success();
+//		}
+//		catch(Exception e) {
+//
+//		}
+//		finally {
+//			if(tx != null) {
+//				tx.close();
+//			}
+//		}
 		return neighbors;
 	}
 	
 	@Override
 	public double getNodeWeight(int nodeId) {
 		double weight = 0;
-		Transaction tx = null;
-		try {
-			tx = ((GraphDatabaseAPI)neo4jGraph).tx().unforced().begin();
+		try (Transaction tx = neo4jGraph.beginTx()) {
 			Node n = neo4jGraph.findNodesByLabelAndProperty(NODE_LABEL, "nodeId", String.valueOf(nodeId))
 					.iterator().next();
 			weight =  getNodeOutDegree(n);
 			tx.success();
+			tx.close();
 		}
-		catch(Exception e) {
-			
-		}
-		finally {
-			if(tx != null) {
-				tx.close();
-			}
-		}
-		
+//		Transaction tx = null;
+//		try {
+//			tx = ((GraphDatabaseAPI)neo4jGraph).tx().unforced().begin();
+//			Node n = neo4jGraph.findNodesByLabelAndProperty(NODE_LABEL, "nodeId", String.valueOf(nodeId))
+//					.iterator().next();
+//			weight =  getNodeOutDegree(n);
+//			tx.success();
+//		}
+//		catch(Exception e) {
+//
+//		}
+//		finally {
+//			if(tx != null) {
+//				tx.close();
+//			}
+//		}
 		return weight;
 	}
 	
@@ -266,34 +300,40 @@ public class Neo4jGraphDatabase implements GraphDatabase {
 	@Override
 	public void initCommunityProperty() {
 		int communityCounter = 0;
-		
-		//maybe commit changes every 1000 transactions?
-		Transaction tx = null;
-		try {
-			tx = ((GraphDatabaseAPI)neo4jGraph).tx().unforced().begin();
+		//TODO: (investigate) commit changes every 1000 transactions?
+		try (Transaction tx = neo4jGraph.beginTx()) {
 			for(Node n : GlobalGraphOperations.at(neo4jGraph).getAllNodes()) {
 				n.setProperty("nodeCommunity", communityCounter);
 				n.setProperty("community", communityCounter);
 				communityCounter++;
 			}
 			tx.success();
+			tx.close();
 		}
-		catch(Exception e) {
-			
-		}
-		finally {
-			if(tx != null) {
-				tx.close();
-			}
-		}
+//		Transaction tx = null;
+//		try {
+//			tx = ((GraphDatabaseAPI)neo4jGraph).tx().unforced().begin();
+//			for(Node n : GlobalGraphOperations.at(neo4jGraph).getAllNodes()) {
+//				n.setProperty("nodeCommunity", communityCounter);
+//				n.setProperty("community", communityCounter);
+//				communityCounter++;
+//			}
+//			tx.success();
+//		}
+//		catch(Exception e) {
+//
+//		}
+//		finally {
+//			if(tx != null) {
+//				tx.close();
+//			}
+//		}
 	}
 
 	@Override
 	public Set<Integer> getCommunitiesConnectedToNodeCommunities(int nodeCommunities) {
 		Set<Integer> communities = new HashSet<Integer>();
-		Transaction tx = null;
-		try {
-			tx = ((GraphDatabaseAPI)neo4jGraph).tx().unforced().begin();
+		try (Transaction tx = neo4jGraph.beginTx()) {
 			ResourceIterable<Node> nodes = neo4jGraph.findNodesByLabelAndProperty(Neo4jGraphDatabase.NODE_LABEL, "nodeCommunity", nodeCommunities);
 			for(Node n : nodes) {
 				for(Relationship r : n.getRelationships(RelTypes.SIMILAR, Direction.OUTGOING)) {
@@ -303,15 +343,29 @@ public class Neo4jGraphDatabase implements GraphDatabase {
 				}
 			}
 			tx.success();
+			tx.close();
 		}
-		catch(Exception e) {
-			
-		}
-		finally {
-			if(tx != null) {
-				tx.close();
-			}
-		}
+//		Transaction tx = null;
+//		try {
+//			tx = ((GraphDatabaseAPI)neo4jGraph).tx().unforced().begin();
+//			ResourceIterable<Node> nodes = neo4jGraph.findNodesByLabelAndProperty(Neo4jGraphDatabase.NODE_LABEL, "nodeCommunity", nodeCommunities);
+//			for(Node n : nodes) {
+//				for(Relationship r : n.getRelationships(RelTypes.SIMILAR, Direction.OUTGOING)) {
+//					Node neighbour = r.getOtherNode(n);
+//					Integer community = (Integer)(neighbour.getProperty("community"));
+//					communities.add(community);
+//				}
+//			}
+//			tx.success();
+//		}
+//		catch(Exception e) {
+//
+//		}
+//		finally {
+//			if(tx != null) {
+//				tx.close();
+//			}
+//		}
 		
 		return communities;
 	}
@@ -319,34 +373,40 @@ public class Neo4jGraphDatabase implements GraphDatabase {
 	@Override
 	public Set<Integer> getNodesFromCommunity(int community) {
 		Set<Integer> nodes = new HashSet<Integer>();
-		Transaction tx = null;
-		try {
-			tx = ((GraphDatabaseAPI)neo4jGraph).tx().unforced().begin();
+		try (Transaction tx = neo4jGraph.beginTx()) {
 			ResourceIterable<Node> iter = neo4jGraph.findNodesByLabelAndProperty(NODE_LABEL, "community", community);
 			for(Node n : iter) {
 				String nodeIdString = (String)(n.getProperty("nodeId"));
 				nodes.add(Integer.valueOf(nodeIdString));
 			}
 			tx.success();
+			tx.close();
 		}
-		catch(Exception e) {
-			
-		}
-		finally {
-			if(tx != null) {
-				tx.close();
-			}
-		}
+//		Transaction tx = null;
+//		try {
+//			tx = ((GraphDatabaseAPI)neo4jGraph).tx().unforced().begin();
+//			ResourceIterable<Node> iter = neo4jGraph.findNodesByLabelAndProperty(NODE_LABEL, "community", community);
+//			for(Node n : iter) {
+//				String nodeIdString = (String)(n.getProperty("nodeId"));
+//				nodes.add(Integer.valueOf(nodeIdString));
+//			}
+//			tx.success();
+//		}
+//		catch(Exception e) {
+//
+//		}
+//		finally {
+//			if(tx != null) {
+//				tx.close();
+//			}
+//		}
 		return nodes;
 	}
 	
 	@Override
 	public Set<Integer> getNodesFromNodeCommunity(int nodeCommunity) {
 		Set<Integer> nodes = new HashSet<Integer>();
-		
-		Transaction tx = null;
-		try {
-			tx = ((GraphDatabaseAPI)neo4jGraph).tx().unforced().begin();
+		try (Transaction tx = neo4jGraph.beginTx()) {
 			ResourceIterable<Node> iter = neo4jGraph.findNodesByLabelAndProperty(NODE_LABEL, "nodeCommunity", nodeCommunity);
 			for(Node n : iter) {
 				String nodeIdString = (String)(n.getProperty("nodeId"));
@@ -355,24 +415,32 @@ public class Neo4jGraphDatabase implements GraphDatabase {
 			tx.success();
 			tx.close();
 		}
-		catch(Exception e) {
-			
-		}
-		finally {
-			if(tx != null) {
-				tx.close();
-			}
-		}
-		
+//		Transaction tx = null;
+//		try {
+//			tx = ((GraphDatabaseAPI)neo4jGraph).tx().unforced().begin();
+//			ResourceIterable<Node> iter = neo4jGraph.findNodesByLabelAndProperty(NODE_LABEL, "nodeCommunity", nodeCommunity);
+//			for(Node n : iter) {
+//				String nodeIdString = (String)(n.getProperty("nodeId"));
+//				nodes.add(Integer.valueOf(nodeIdString));
+//			}
+//			tx.success();
+//			tx.close();
+//		}
+//		catch(Exception e) {
+//
+//		}
+//		finally {
+//			if(tx != null) {
+//				tx.close();
+//			}
+//		}
 		return nodes;
 	}
 
 	@Override
 	public double getEdgesInsideCommunity(int nodeCommunity, int communityNodes) {
 		double edges = 0;
-		Transaction tx = null;
-		try {
-			tx = ((GraphDatabaseAPI)neo4jGraph).tx().unforced().begin();
+		try (Transaction tx = neo4jGraph.beginTx()) {
 			ResourceIterable<Node> nodes = neo4jGraph.findNodesByLabelAndProperty(NODE_LABEL, "nodeCommunity", nodeCommunity);
 			ResourceIterable<Node> comNodes = neo4jGraph.findNodesByLabelAndProperty(NODE_LABEL, "community", communityNodes);
 			for(Node node : nodes) {
@@ -385,25 +453,39 @@ public class Neo4jGraphDatabase implements GraphDatabase {
 				}
 			}
 			tx.success();
+			tx.close();
 		}
-		catch(Exception e) {
-			
-		}
-		finally {
-			if(tx != null) {
-				tx.close();
-			}
-		}
-		
+//		Transaction tx = null;
+//		try {
+//			tx = ((GraphDatabaseAPI)neo4jGraph).tx().unforced().begin();
+//			ResourceIterable<Node> nodes = neo4jGraph.findNodesByLabelAndProperty(NODE_LABEL, "nodeCommunity", nodeCommunity);
+//			ResourceIterable<Node> comNodes = neo4jGraph.findNodesByLabelAndProperty(NODE_LABEL, "community", communityNodes);
+//			for(Node node : nodes) {
+//				Iterable<Relationship> relationships = node.getRelationships(RelTypes.SIMILAR, Direction.OUTGOING);
+//				for(Relationship r : relationships) {
+//					Node neighbor = r.getOtherNode(node);
+//					if(Iterables.contains(comNodes, neighbor)) {
+//						edges++;
+//					}
+//				}
+//			}
+//			tx.success();
+//		}
+//		catch(Exception e) {
+//
+//		}
+//		finally {
+//			if(tx != null) {
+//				tx.close();
+//			}
+//		}
 		return edges;
 	}
 
 	@Override
 	public double getCommunityWeight(int community) {
 		double communityWeight = 0;
-		Transaction tx = null;
-		try {
-			tx = ((GraphDatabaseAPI)neo4jGraph).tx().unforced().begin();
+		try (Transaction tx = neo4jGraph.beginTx()) {
 			ResourceIterable<Node> iter = neo4jGraph.findNodesByLabelAndProperty(NODE_LABEL, "community", community);
 			if(Iterables.size(iter) > 1) {
 				for(Node n : iter) {
@@ -413,25 +495,33 @@ public class Neo4jGraphDatabase implements GraphDatabase {
 			tx.success();
 			tx.close();
 		}
-		catch(Exception e) {
-			
-		}
-		finally {
-			if(tx != null) {
-				tx.close();
-			}
-		}
-		
+//		Transaction tx = null;
+//		try {
+//			tx = ((GraphDatabaseAPI)neo4jGraph).tx().unforced().begin();
+//			ResourceIterable<Node> iter = neo4jGraph.findNodesByLabelAndProperty(NODE_LABEL, "community", community);
+//			if(Iterables.size(iter) > 1) {
+//				for(Node n : iter) {
+//					communityWeight += getNodeOutDegree(n);
+//				}
+//			}
+//			tx.success();
+//			tx.close();
+//		}
+//		catch(Exception e) {
+//
+//		}
+//		finally {
+//			if(tx != null) {
+//				tx.close();
+//			}
+//		}
 		return communityWeight;
 	}
 	
 	@Override
 	public double getNodeCommunityWeight(int nodeCommunity) {
 		double nodeCommunityWeight = 0;
-		Transaction tx = null;
-		try {
-			tx = ((GraphDatabaseAPI)neo4jGraph).tx().unforced().begin();
-			
+		try (Transaction tx = neo4jGraph.beginTx()) {
 			ResourceIterable<Node> iter = neo4jGraph.findNodesByLabelAndProperty(NODE_LABEL, "nodeCommunity", nodeCommunity);
 			if(Iterables.size(iter) > 1) {
 				for(Node n : iter) {
@@ -439,59 +529,82 @@ public class Neo4jGraphDatabase implements GraphDatabase {
 				}
 			}
 			tx.success();
+			tx.close();
 		}
-		catch(Exception e) {
-			
-		}
-		finally {
-			if(tx != null) {
-				tx.close();
-			}
-		}
-		
+//		Transaction tx = null;
+//		try {
+//			tx = ((GraphDatabaseAPI)neo4jGraph).tx().unforced().begin();
+//
+//			ResourceIterable<Node> iter = neo4jGraph.findNodesByLabelAndProperty(NODE_LABEL, "nodeCommunity", nodeCommunity);
+//			if(Iterables.size(iter) > 1) {
+//				for(Node n : iter) {
+//					nodeCommunityWeight += getNodeOutDegree(n);
+//				}
+//			}
+//			tx.success();
+//		}
+//		catch(Exception e) {
+//
+//		}
+//		finally {
+//			if(tx != null) {
+//				tx.close();
+//			}
+//		}
 		return nodeCommunityWeight;
 	}
 
 	@Override
 	public void moveNode(int nodeCommunity, int toCommunity) {
-		Transaction tx = null;
-		try {
-			tx = ((GraphDatabaseAPI)neo4jGraph).tx().unforced().begin();
+		try (Transaction tx = neo4jGraph.beginTx()) {
 			ResourceIterable<Node> fromIter = neo4jGraph.findNodesByLabelAndProperty(NODE_LABEL, "nodeCommunity", nodeCommunity);
 			for(Node node : fromIter) {
 				node.setProperty("community", toCommunity);
 			}
 			tx.success();
-		}		
-		catch(Exception e) {
-			
+			tx.close();
 		}
-		finally {
-			if(tx != null) {
-				tx.close();
-			}
-		}
+//		Transaction tx = null;
+//		try {
+//			tx = ((GraphDatabaseAPI)neo4jGraph).tx().unforced().begin();
+//			ResourceIterable<Node> fromIter = neo4jGraph.findNodesByLabelAndProperty(NODE_LABEL, "nodeCommunity", nodeCommunity);
+//			for(Node node : fromIter) {
+//				node.setProperty("community", toCommunity);
+//			}
+//			tx.success();
+//		}
+//		catch(Exception e) {
+//
+//		}
+//		finally {
+//			if(tx != null) {
+//				tx.close();
+//			}
+//		}
 	}
 
 	@Override
 	public double getGraphWeightSum() {
 		int edgeCount = 0;
-		
-		Transaction tx = null;
-		try {
-			tx = ((GraphDatabaseAPI)neo4jGraph).tx().unforced().begin();
+		try (Transaction tx = neo4jGraph.beginTx()) {
 			edgeCount = IteratorUtil.count(GlobalGraphOperations.at(neo4jGraph).getAllRelationships());
 			tx.success();
+			tx.close();
 		}
-		catch(Exception e) {
-			
-		}
-		finally {
-			if(tx != null) {
-				tx.close();
-			}
-		}
-		
+//		Transaction tx = null;
+//		try {
+//			tx = ((GraphDatabaseAPI)neo4jGraph).tx().unforced().begin();
+//			edgeCount = IteratorUtil.count(GlobalGraphOperations.at(neo4jGraph).getAllRelationships());
+//			tx.success();
+//		}
+//		catch(Exception e) {
+//
+//		}
+//		finally {
+//			if(tx != null) {
+//				tx.close();
+//			}
+//		}
 		return (double)edgeCount;
 	}
 	
@@ -499,10 +612,7 @@ public class Neo4jGraphDatabase implements GraphDatabase {
 	public int reInitializeCommunities() {
 		Map<Integer, Integer> initCommunities = new HashMap<Integer, Integer>();
 		int communityCounter = 0;
-		
-		Transaction tx = null;
-		try {
-			tx = ((GraphDatabaseAPI)neo4jGraph).tx().unforced().begin();
+		try (Transaction tx = neo4jGraph.beginTx()) {
 			for(Node n : GlobalGraphOperations.at(neo4jGraph).getAllNodes()) {
 				Integer communityId = (Integer)(n.getProperty("community"));
 				if(!initCommunities.containsKey(communityId)) {
@@ -514,75 +624,98 @@ public class Neo4jGraphDatabase implements GraphDatabase {
 				n.setProperty("nodeCommunity", newCommunityId);
 			}
 			tx.success();
+			tx.close();
 		}
-		catch(Exception e) {
-			
-		}
-		finally {
-			if(tx != null) {
-				tx.close();
-			}
-		}
-		
+//		Transaction tx = null;
+//		try {
+//			tx = ((GraphDatabaseAPI)neo4jGraph).tx().unforced().begin();
+//			for(Node n : GlobalGraphOperations.at(neo4jGraph).getAllNodes()) {
+//				Integer communityId = (Integer)(n.getProperty("community"));
+//				if(!initCommunities.containsKey(communityId)) {
+//					initCommunities.put(communityId, communityCounter);
+//					communityCounter++;
+//				}
+//				int newCommunityId = initCommunities.get(communityId);
+//				n.setProperty("community", newCommunityId);
+//				n.setProperty("nodeCommunity", newCommunityId);
+//			}
+//			tx.success();
+//		}
+//		catch(Exception e) {
+//
+//		}
+//		finally {
+//			if(tx != null) {
+//				tx.close();
+//			}
+//		}
 		return communityCounter;
 	}
 
 	@Override
 	public int getCommunity(int nodeCommunity) {
 		Integer community = 0;
-		
-		Transaction tx = null;
-		try {
-			tx = ((GraphDatabaseAPI)neo4jGraph).tx().unforced().begin();
+		try (Transaction tx = neo4jGraph.beginTx()) {
 			Node node = neo4jGraph.findNodesByLabelAndProperty(NODE_LABEL, "nodeCommunity", nodeCommunity)
 					.iterator().next();
 			community = (Integer) (node.getProperty("community"));
 			tx.success();
+			tx.close();
 		}
-		catch(Exception e) {
-			
-		}
-		finally {
-			if(tx != null) {
-				tx.close();
-			}
-		}
-		
+//		Transaction tx = null;
+//		try {
+//			tx = ((GraphDatabaseAPI)neo4jGraph).tx().unforced().begin();
+//			Node node = neo4jGraph.findNodesByLabelAndProperty(NODE_LABEL, "nodeCommunity", nodeCommunity)
+//					.iterator().next();
+//			community = (Integer) (node.getProperty("community"));
+//			tx.success();
+//		}
+//		catch(Exception e) {
+//
+//		}
+//		finally {
+//			if(tx != null) {
+//				tx.close();
+//			}
+//		}
 		return community;
 	}
 	
 	@Override
 	public int getCommunityFromNode(int nodeId) {
 		Integer community = 0;
-		Transaction tx = null;
-		try {
-			tx = ((GraphDatabaseAPI)neo4jGraph).tx().unforced().begin();
-//			Node node = nodeIndex.get("nodeId", nodeId).getSingle();
+		try (Transaction tx = neo4jGraph.beginTx()) {
 			Node node = neo4jGraph.findNodesByLabelAndProperty(NODE_LABEL, "nodeId", String.valueOf(nodeId))
 					.iterator().next();
 			community = (Integer)(node.getProperty("community"));
 			tx.success();
 			tx.close();
 		}
-		catch(Exception e) {
-			
-		}
-		finally {
-			if(tx != null) {
-				tx.close();
-			}
-		}
-		
+//		Transaction tx = null;
+//		try {
+//			tx = ((GraphDatabaseAPI)neo4jGraph).tx().unforced().begin();
+////			Node node = nodeIndex.get("nodeId", nodeId).getSingle();
+//			Node node = neo4jGraph.findNodesByLabelAndProperty(NODE_LABEL, "nodeId", String.valueOf(nodeId))
+//					.iterator().next();
+//			community = (Integer)(node.getProperty("community"));
+//			tx.success();
+//			tx.close();
+//		}
+//		catch(Exception e) {
+//
+//		}
+//		finally {
+//			if(tx != null) {
+//				tx.close();
+//			}
+//		}
 		return community;
 	}
 
 	@Override
 	public int getCommunitySize(int community) {
 		Set<Integer> nodeCommunities = new HashSet<Integer>();
-		
-		Transaction tx = null;
-		try {
-			tx = ((GraphDatabaseAPI)neo4jGraph).tx().unforced().begin();
+		try (Transaction tx = neo4jGraph.beginTx()) {
 			ResourceIterable<Node> nodes = neo4jGraph.findNodesByLabelAndProperty(NODE_LABEL, "community", community);
 			for(Node n : nodes) {
 				Integer nodeCommunity = (Integer)(n.getProperty("community"));
@@ -591,25 +724,32 @@ public class Neo4jGraphDatabase implements GraphDatabase {
 			tx.success();
 			tx.close();
 		}
-		catch(Exception e) {
-			
-		}
-		finally {
-			if(tx != null) {
-				tx.close();
-			}
-		}
-		
+//		Transaction tx = null;
+//		try {
+//			tx = ((GraphDatabaseAPI)neo4jGraph).tx().unforced().begin();
+//			ResourceIterable<Node> nodes = neo4jGraph.findNodesByLabelAndProperty(NODE_LABEL, "community", community);
+//			for(Node n : nodes) {
+//				Integer nodeCommunity = (Integer)(n.getProperty("community"));
+//				nodeCommunities.add(nodeCommunity);
+//			}
+//			tx.success();
+//			tx.close();
+//		}
+//		catch(Exception e) {
+//
+//		}
+//		finally {
+//			if(tx != null) {
+//				tx.close();
+//			}
+//		}
 		return nodeCommunities.size();
 	}
 
 	@Override
 	public Map<Integer, List<Integer>> mapCommunities(int numberOfCommunities) {
 		Map<Integer, List<Integer>> communities = new HashMap<Integer, List<Integer>>();
-		
-		Transaction tx = null;
-		try {
-			tx = ((GraphDatabaseAPI)neo4jGraph).tx().unforced().begin();
+		try (Transaction tx = neo4jGraph.beginTx()) {
 			for(int i = 0; i < numberOfCommunities; i++) {
 				ResourceIterable<Node> nodesIter = neo4jGraph.findNodesByLabelAndProperty(NODE_LABEL, "community", i);
 				List<Integer> nodes = new ArrayList<Integer>();
@@ -620,24 +760,36 @@ public class Neo4jGraphDatabase implements GraphDatabase {
 				communities.put(i, nodes);
 			}
 			tx.success();
-			
+			tx.close();
 		}
-		catch(Exception e) {
-			
-		}
-		finally {
-			if(tx != null)
-				tx.close();
-		}
-		
+//		Transaction tx = null;
+//		try {
+//			tx = ((GraphDatabaseAPI)neo4jGraph).tx().unforced().begin();
+//			for(int i = 0; i < numberOfCommunities; i++) {
+//				ResourceIterable<Node> nodesIter = neo4jGraph.findNodesByLabelAndProperty(NODE_LABEL, "community", i);
+//				List<Integer> nodes = new ArrayList<Integer>();
+//				for(Node n : nodesIter) {
+//					String nodeIdString = (String)(n.getProperty("nodeId"));
+//					nodes.add(Integer.valueOf(nodeIdString));
+//				}
+//				communities.put(i, nodes);
+//			}
+//			tx.success();
+//
+//		}
+//		catch(Exception e) {
+//
+//		}
+//		finally {
+//			if(tx != null)
+//				tx.close();
+//		}
 		return communities;
 	}
 
 	@Override
 	public boolean nodeExists(int nodeId) {
-		Transaction tx = null;
-		try {
-			tx = ((GraphDatabaseAPI)neo4jGraph).tx().unforced().begin();
+		try (Transaction tx = neo4jGraph.beginTx()) {
 			ResourceIterable<Node> nodesIter = neo4jGraph.findNodesByLabelAndProperty(NODE_LABEL, "nodeId", nodeId);
 			if(nodesIter.iterator().hasNext()) {
 				tx.success();
@@ -645,15 +797,27 @@ public class Neo4jGraphDatabase implements GraphDatabase {
 				return true;
 			}
 			tx.success();
+			tx.close();
 		}
-		catch(Exception e) {
-			
-		}
-		finally {
-			if(tx != null) {
-				tx.close();
-			}
-		}
+//		Transaction tx = null;
+//		try {
+//			tx = ((GraphDatabaseAPI)neo4jGraph).tx().unforced().begin();
+//			ResourceIterable<Node> nodesIter = neo4jGraph.findNodesByLabelAndProperty(NODE_LABEL, "nodeId", nodeId);
+//			if(nodesIter.iterator().hasNext()) {
+//				tx.success();
+//				tx.close();
+//				return true;
+//			}
+//			tx.success();
+//		}
+//		catch(Exception e) {
+//
+//		}
+//		finally {
+//			if(tx != null) {
+//				tx.close();
+//			}
+//		}
 		return false;
 	}
 	
