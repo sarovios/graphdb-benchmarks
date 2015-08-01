@@ -38,7 +38,7 @@ import java.util.concurrent.TimeUnit;
  * Neo4j graph database implementation
  * 
  * @author sotbeis
- * @email sotbeis@iti.gr
+ * @email sot.beis@gmail.com
  */
 @SuppressWarnings("deprecation")
 public class Neo4jGraphDatabase implements GraphDatabase {

@@ -8,7 +8,7 @@ import org.apache.log4j.Logger;
 
 import eu.socialsensor.graphdatabases.GraphDatabase;
 import eu.socialsensor.graphdatabases.Neo4jGraphDatabase;
-import eu.socialsensor.graphdatabases.OrientGraphDatabase;
+//import eu.socialsensor.graphdatabases.OrientGraphDatabase;
 import eu.socialsensor.graphdatabases.SparkseeGraphDatabase;
 import eu.socialsensor.graphdatabases.TitanGraphDatabase;
 import eu.socialsensor.main.GraphDatabaseBenchmark;
@@ -71,18 +71,18 @@ public class FindNodesOfAllEdgesBenchmark implements Benchmark {
 		utils.writeResults(titanTimes, orientTimes, neo4jTimes, sparkseeTimes, QW_FA_RESULTS, 
 				"Find Adjacent Nodes of All Edges");
 	}
-	
-	@SuppressWarnings("unused")
-	private void orientdbFindNodesOfAllEdgesBenchmark() {
-		GraphDatabase orientGraphDatabase = new OrientGraphDatabase();
-		orientGraphDatabase.open(GraphDatabaseBenchmark.ORIENTDB_PATH);
-		long start = System.currentTimeMillis();
-		orientGraphDatabase.nodesOfAllEdgesQuery();
-		long orientTime = System.currentTimeMillis() - start;
-		orientGraphDatabase.shutdown();
-		orientTimes[orientScenarioCount] = orientTime / 1000.0;
-		orientScenarioCount++;
-	}
+//
+//	@SuppressWarnings("unused")
+//	private void orientdbFindNodesOfAllEdgesBenchmark() {
+//		GraphDatabase orientGraphDatabase = new OrientGraphDatabase();
+//		orientGraphDatabase.open(GraphDatabaseBenchmark.ORIENTDB_PATH);
+//		long start = System.currentTimeMillis();
+//		orientGraphDatabase.nodesOfAllEdgesQuery();
+//		long orientTime = System.currentTimeMillis() - start;
+//		orientGraphDatabase.shutdown();
+//		orientTimes[orientScenarioCount] = orientTime / 1000.0;
+//		orientScenarioCount++;
+//	}
 	
 	@SuppressWarnings("unused")
 	private void titanFindNodesOfAllEdgesBenchmark() {

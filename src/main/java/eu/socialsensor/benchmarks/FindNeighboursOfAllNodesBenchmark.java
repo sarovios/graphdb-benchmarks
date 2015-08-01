@@ -2,7 +2,7 @@ package eu.socialsensor.benchmarks;
 
 import eu.socialsensor.graphdatabases.GraphDatabase;
 import eu.socialsensor.graphdatabases.Neo4jGraphDatabase;
-import eu.socialsensor.graphdatabases.OrientGraphDatabase;
+//import eu.socialsensor.graphdatabases.OrientGraphDatabase;
 import eu.socialsensor.graphdatabases.SparkseeGraphDatabase;
 import eu.socialsensor.graphdatabases.TitanGraphDatabase;
 import eu.socialsensor.main.GraphDatabaseBenchmark;
@@ -72,17 +72,17 @@ public class FindNeighboursOfAllNodesBenchmark implements Benchmark {
 				"Find Neighbours of All Nodes");		
 	}
 	
-	@SuppressWarnings("unused")
-	private void orientdbFindNeighboursOfAllNodesBenchmark() {
-		GraphDatabase orientGraphDatabase = new OrientGraphDatabase();
-		orientGraphDatabase.open(GraphDatabaseBenchmark.ORIENTDB_PATH);
-		long start = System.currentTimeMillis();
-		orientGraphDatabase.neighborsOfAllNodesQuery();
-		long orientTime = System.currentTimeMillis() - start;
-		orientGraphDatabase.shutdown();
-		orientTimes[orientScenarioCount] = orientTime / 1000.0;
-		orientScenarioCount++;
-	}
+//	@SuppressWarnings("unused")
+//	private void orientdbFindNeighboursOfAllNodesBenchmark() {
+//		GraphDatabase orientGraphDatabase = new OrientGraphDatabase();
+//		orientGraphDatabase.open(GraphDatabaseBenchmark.ORIENTDB_PATH);
+//		long start = System.currentTimeMillis();
+//		orientGraphDatabase.neighborsOfAllNodesQuery();
+//		long orientTime = System.currentTimeMillis() - start;
+//		orientGraphDatabase.shutdown();
+//		orientTimes[orientScenarioCount] = orientTime / 1000.0;
+//		orientScenarioCount++;
+//	}
 	
 	@SuppressWarnings("unused")
 	private void titanFindNeighboursOfAllNodesBenchmark() {

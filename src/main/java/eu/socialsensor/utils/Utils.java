@@ -21,7 +21,7 @@ import org.apache.log4j.Logger;
 
 import eu.socialsensor.graphdatabases.GraphDatabase;
 import eu.socialsensor.graphdatabases.Neo4jGraphDatabase;
-import eu.socialsensor.graphdatabases.OrientGraphDatabase;
+//import eu.socialsensor.graphdatabases.OrientGraphDatabase;
 import eu.socialsensor.graphdatabases.SparkseeGraphDatabase;
 import eu.socialsensor.graphdatabases.TitanGraphDatabase;
 import eu.socialsensor.main.GraphDatabaseBenchmark;
@@ -220,13 +220,13 @@ public class Utils {
 			clearGC();
 		}
 				
-		if(GraphDatabaseBenchmark.ORIENTDB_SELECTED) {
-			GraphDatabase orientGraphDatabase = new OrientGraphDatabase();
-			orientGraphDatabase.createGraphForMassiveLoad(GraphDatabaseBenchmark.ORIENTDB_PATH);
-			orientGraphDatabase.massiveModeLoading(dataset);
-			orientGraphDatabase.shutdownMassiveGraph();
-			clearGC();
-		}
+//		if(GraphDatabaseBenchmark.ORIENTDB_SELECTED) {
+//			GraphDatabase orientGraphDatabase = new OrientGraphDatabase();
+//			orientGraphDatabase.createGraphForMassiveLoad(GraphDatabaseBenchmark.ORIENTDB_PATH);
+//			orientGraphDatabase.massiveModeLoading(dataset);
+//			orientGraphDatabase.shutdownMassiveGraph();
+//			clearGC();
+//		}
 		
 		if(GraphDatabaseBenchmark.NEO4J_SELECTED) {
 			GraphDatabase neo4jGraphDatabase = new Neo4jGraphDatabase();
@@ -254,10 +254,10 @@ public class Utils {
 			GraphDatabase titanGraphDatabase = new TitanGraphDatabase();
 			titanGraphDatabase.delete(GraphDatabaseBenchmark.TITANDB_PATH);
 		}
-		if(GraphDatabaseBenchmark.ORIENTDB_SELECTED) {
-			GraphDatabase orientGraphDatabase = new OrientGraphDatabase();
-			orientGraphDatabase.delete(GraphDatabaseBenchmark.ORIENTDB_PATH);
-		}
+//		if(GraphDatabaseBenchmark.ORIENTDB_SELECTED) {
+//			GraphDatabase orientGraphDatabase = new OrientGraphDatabase();
+//			orientGraphDatabase.delete(GraphDatabaseBenchmark.ORIENTDB_PATH);
+//		}
 		if(GraphDatabaseBenchmark.NEO4J_SELECTED) {
 			GraphDatabase neo4jGraphDatabase = new Neo4jGraphDatabase();
 			neo4jGraphDatabase.delete(GraphDatabaseBenchmark.NEO4JDB_PATH);

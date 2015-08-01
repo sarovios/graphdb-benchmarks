@@ -68,7 +68,7 @@ public class Neo4jQuery implements Query {
 	public void findNodesOfAllEdges() {	
 		Transaction tx = null;
 		try {
-			tx = ((GraphDatabaseAPI)neo4jGraph).tx().unforced().begin();
+			tx = neo4jGraph.beginTx();
 			for(Relationship r : GlobalGraphOperations.at(neo4jGraph).getAllRelationships()) {
 				@SuppressWarnings("unused")
 				Node startNode = r.getStartNode();

@@ -23,29 +23,29 @@ import eu.socialsensor.graphdatabases.Neo4jGraphDatabase;
 import eu.socialsensor.utils.Utils;
 
 /**
- * Implementation of single Insertion in Neo4j
- * graph database
- * 
- * @author sotbeis
- * @email sotbeis@iti.gr
- * 
- */
+* Implementation of single Insertion in Neo4j
+* graph database
+*
+* @author sotbeis
+* @email sotbeis@iti.gr
+*
+*/
 public class Neo4jSingleInsertion implements Insertion {
 
 	public static String INSERTION_TIMES_OUTPUT_PATH = null;
-	
+
 	private static int count;
-	
+
 	private GraphDatabaseService neo4jGraph = null;
 	ExecutionEngine engine;
-	
+
 	private Logger logger = Logger.getLogger(Neo4jSingleInsertion.class);
-	
+
 	public Neo4jSingleInsertion(GraphDatabaseService neo4jGraph) {
 		this.neo4jGraph = neo4jGraph;
 		engine = new ExecutionEngine(this.neo4jGraph);
 	}
-	
+
 	@Override
 	public void createGraph(String datasetDir) {
 		logger.setLevel(Level.INFO);
@@ -63,71 +63,71 @@ public class Neo4jSingleInsertion implements Insertion {
 			while((line = reader.readLine()) != null) {
 				if(lineCounter > 4) {
 					String[] parts = line.split("\t");
-					
+
 					srcNode = getOrCreate(parts[0]);
 					dstNode = getOrCreate(parts[1]);
-					
+
 					Transaction tx = null;
 					try {
-						tx = ((GraphDatabaseAPI)neo4jGraph).tx().unforced().begin();
+						tx = neo4jGraph.beginTx();
 						srcNode.createRelationshipTo(dstNode, Neo4jGraphDatabase.RelTypes.SIMILAR);
 						tx.success();
-						
+
 					}
 					catch(Exception e) {
-						
+
 					}
 					finally {
 						if(tx != null) {
 							tx.close();
 						}
 					}
-					
+
 					if(lineCounter % 1000 == 0) {
 						duration = System.currentTimeMillis() - start;
 						insertionTimes.add((double) duration);
 						start = System.currentTimeMillis();
 					}
-					
+
 				}
 				lineCounter++;
 			}
-			
+
 			duration = System.currentTimeMillis() - start;
 			insertionTimes.add((double) duration);
 			reader.close();
-		} 
+		}
 		catch (IOException e) {
 			e.printStackTrace();
 		}
 		Utils utils = new Utils();
 		utils.writeTimes(insertionTimes, Neo4jSingleInsertion.INSERTION_TIMES_OUTPUT_PATH+"."+count);
 	}
-	
+
 	private Node getOrCreate(String nodeId) {
 		Node result = null;
-		
+
 		Transaction tx = null;
 		try {
-			
-			tx = ((GraphDatabaseAPI)neo4jGraph).tx().unforced().begin();
-			
+
+			tx = neo4jGraph.beginTx();
+
 			String queryString = "MERGE (n:Node {nodeId: {nodeId}}) RETURN n";
 		    Map<String, Object> parameters = new HashMap<String, Object>();
 		    parameters.put( "nodeId", nodeId);
 		    ResourceIterator<Node> resultIterator = engine.execute( queryString, parameters ).columnAs( "n" );
 		    result = resultIterator.next();
 		    tx.success();
-		    
+
 		}
 		catch(Exception e) {
-			
+
 		}
 		finally {
 			tx.close();
 		}
-		
+
 		return result;
 	}
-	
+
 }

@@ -14,7 +14,7 @@ import org.apache.log4j.Logger;
 import eu.socialsensor.clustering.LouvainMethod;
 import eu.socialsensor.graphdatabases.GraphDatabase;
 import eu.socialsensor.graphdatabases.Neo4jGraphDatabase;
-import eu.socialsensor.graphdatabases.OrientGraphDatabase;
+//import eu.socialsensor.graphdatabases.OrientGraphDatabase;
 import eu.socialsensor.graphdatabases.SparkseeGraphDatabase;
 import eu.socialsensor.graphdatabases.TitanGraphDatabase;
 import eu.socialsensor.main.GraphDatabaseBenchmark;
@@ -95,14 +95,14 @@ public class ClusteringBenchmark implements Benchmark {
 			}
 			utils.clearGC();
 			
-			if(GraphDatabaseBenchmark.ORIENTDB_SELECTED) {
-				out.write("\n");
-				out.write("\n");
-				out.write("OrientDB execution time");
-				out.write("\n");
-				orientClusteringBenchmark(GraphDatabaseBenchmark.ORIENTDB_PATH);
-			}
-			utils.clearGC();
+//			if(GraphDatabaseBenchmark.ORIENTDB_SELECTED) {
+//				out.write("\n");
+//				out.write("\n");
+//				out.write("OrientDB execution time");
+//				out.write("\n");
+//				orientClusteringBenchmark(GraphDatabaseBenchmark.ORIENTDB_PATH);
+//			}
+//			utils.clearGC();
 			
 			if(GraphDatabaseBenchmark.TITAN_SELECTED) {
 				out.write("\n");
@@ -173,41 +173,41 @@ public class ClusteringBenchmark implements Benchmark {
 		titanGraphDatabase.shutdown();
 	}
 	
-	private void orientClusteringBenchmark(String dbPAth) throws ExecutionException, IOException {
-		GraphDatabase orientGraphDatabase = new OrientGraphDatabase();
-		orientGraphDatabase.open(dbPAth);
-		int runs = 1;
-		int numberOfLoops = 2;
-		out.write("Cache Size,Time(sec)");
-		out.write("\n");
-		for(int i = 0; i < cacheSizes.size(); i++) {
-			if(runs > 1) {
-				numberOfLoops = 1;
-			}
-			for(int j = 0; j < numberOfLoops; j++) {
-				int cacheSize = cacheSizes.get(i);
-				logger.info("Graph Database: OrientDB, Dataset: " + SYNTH_DATASET+", Cache Size: " + cacheSize);
-				
-				long start = System.currentTimeMillis();
-				LouvainMethod louvainMethodCache = new LouvainMethod(orientGraphDatabase, cacheSize, IS_RANDOMIZED);
-				louvainMethodCache.computeModularity();
-				double orientTime = (System.currentTimeMillis() - start) / 1000.0;
-				
-				out.write(cacheSize + ","+orientTime);
-				out.write("\n");
-				
-				//evaluation with NMI
-				Map<Integer, List<Integer>> predictedCommunities = orientGraphDatabase.mapCommunities(louvainMethodCache.getN());
-				Utils utils = new Utils();
-				Map<Integer, List<Integer>> actualCommunities = utils.mapNodesToCommunities(EVALUATION_DATASET);
-				Metrics metrics = new Metrics();
-				double NMI = metrics.normalizedMutualInformation(this.nodesCnt, actualCommunities, predictedCommunities);
-				logger.info("NMI value: " + NMI);
-			}
-			runs++;
-		}
-		orientGraphDatabase.shutdown();
-	}
+//	private void orientClusteringBenchmark(String dbPAth) throws ExecutionException, IOException {
+//		GraphDatabase orientGraphDatabase = new OrientGraphDatabase();
+//		orientGraphDatabase.open(dbPAth);
+//		int runs = 1;
+//		int numberOfLoops = 2;
+//		out.write("Cache Size,Time(sec)");
+//		out.write("\n");
+//		for(int i = 0; i < cacheSizes.size(); i++) {
+//			if(runs > 1) {
+//				numberOfLoops = 1;
+//			}
+//			for(int j = 0; j < numberOfLoops; j++) {
+//				int cacheSize = cacheSizes.get(i);
+//				logger.info("Graph Database: OrientDB, Dataset: " + SYNTH_DATASET+", Cache Size: " + cacheSize);
+//
+//				long start = System.currentTimeMillis();
+//				LouvainMethod louvainMethodCache = new LouvainMethod(orientGraphDatabase, cacheSize, IS_RANDOMIZED);
+//				louvainMethodCache.computeModularity();
+//				double orientTime = (System.currentTimeMillis() - start) / 1000.0;
+//
+//				out.write(cacheSize + ","+orientTime);
+//				out.write("\n");
+//
+//				//evaluation with NMI
+//				Map<Integer, List<Integer>> predictedCommunities = orientGraphDatabase.mapCommunities(louvainMethodCache.getN());
+//				Utils utils = new Utils();
+//				Map<Integer, List<Integer>> actualCommunities = utils.mapNodesToCommunities(EVALUATION_DATASET);
+//				Metrics metrics = new Metrics();
+//				double NMI = metrics.normalizedMutualInformation(this.nodesCnt, actualCommunities, predictedCommunities);
+//				logger.info("NMI value: " + NMI);
+//			}
+//			runs++;
+//		}
+//		orientGraphDatabase.shutdown();
+//	}
 	
 	private void neo4jClusteringBenchmark(String dbPAth) throws ExecutionException, IOException {
 		GraphDatabase neo4jGraphDatabase = new Neo4jGraphDatabase();

@@ -2,11 +2,11 @@ package eu.socialsensor.benchmarks;
 
 import eu.socialsensor.graphdatabases.GraphDatabase;
 import eu.socialsensor.graphdatabases.Neo4jGraphDatabase;
-import eu.socialsensor.graphdatabases.OrientGraphDatabase;
+//import eu.socialsensor.graphdatabases.OrientGraphDatabase;
 import eu.socialsensor.graphdatabases.SparkseeGraphDatabase;
 import eu.socialsensor.graphdatabases.TitanGraphDatabase;
-import eu.socialsensor.insert.Neo4jSingleInsertion;
-import eu.socialsensor.insert.OrientSingleInsertion;
+//import eu.socialsensor.insert.Neo4jSingleInsertion;
+//import eu.socialsensor.insert.OrientSingleInsertion;
 import eu.socialsensor.insert.SparkseeSingleInsertion;
 import eu.socialsensor.insert.TitanSingleInsertion;
 import eu.socialsensor.main.GraphDatabaseBenchmark;
@@ -87,21 +87,21 @@ public class SingleInsertionBenchmark implements Benchmark {
 			utils.deleteMultipleFiles(TitanSingleInsertion.INSERTION_TIMES_OUTPUT_PATH, GraphDatabaseBenchmark.SCENARIOS);
 		}
 		
-		if(GraphDatabaseBenchmark.ORIENTDB_SELECTED) {
-			List<List<Double>> orientInsertionTimesOfEachScenario = new ArrayList<List<Double>>(GraphDatabaseBenchmark.SCENARIOS);
-			utils.getDocumentsAs2dList(orientInsertionTimesOfEachScenario, OrientSingleInsertion.INSERTION_TIMES_OUTPUT_PATH);
-			List<Double> orientMeanInsertionTimes = utils.calculateMeanList(orientInsertionTimesOfEachScenario);
-			utils.writeTimes(orientMeanInsertionTimes, OrientSingleInsertion.INSERTION_TIMES_OUTPUT_PATH);
-			utils.deleteMultipleFiles(OrientSingleInsertion.INSERTION_TIMES_OUTPUT_PATH, GraphDatabaseBenchmark.SCENARIOS);
-		}
+//		if(GraphDatabaseBenchmark.ORIENTDB_SELECTED) {
+//			List<List<Double>> orientInsertionTimesOfEachScenario = new ArrayList<List<Double>>(GraphDatabaseBenchmark.SCENARIOS);
+//			utils.getDocumentsAs2dList(orientInsertionTimesOfEachScenario, OrientSingleInsertion.INSERTION_TIMES_OUTPUT_PATH);
+//			List<Double> orientMeanInsertionTimes = utils.calculateMeanList(orientInsertionTimesOfEachScenario);
+//			utils.writeTimes(orientMeanInsertionTimes, OrientSingleInsertion.INSERTION_TIMES_OUTPUT_PATH);
+//			utils.deleteMultipleFiles(OrientSingleInsertion.INSERTION_TIMES_OUTPUT_PATH, GraphDatabaseBenchmark.SCENARIOS);
+//		}
 		
-		if(GraphDatabaseBenchmark.NEO4J_SELECTED) {
-			List<List<Double>> neo4jInsertionTimesOfEachScenario = new ArrayList<List<Double>>(GraphDatabaseBenchmark.SCENARIOS);
-			utils.getDocumentsAs2dList(neo4jInsertionTimesOfEachScenario, Neo4jSingleInsertion.INSERTION_TIMES_OUTPUT_PATH);
-			List<Double> neo4jMeanInsertionTimes = utils.calculateMeanList(neo4jInsertionTimesOfEachScenario);
-			utils.writeTimes(neo4jMeanInsertionTimes, Neo4jSingleInsertion.INSERTION_TIMES_OUTPUT_PATH);
-			utils.deleteMultipleFiles(Neo4jSingleInsertion.INSERTION_TIMES_OUTPUT_PATH, GraphDatabaseBenchmark.SCENARIOS);
-		}
+//		if(GraphDatabaseBenchmark.NEO4J_SELECTED) {
+//			List<List<Double>> neo4jInsertionTimesOfEachScenario = new ArrayList<List<Double>>(GraphDatabaseBenchmark.SCENARIOS);
+//			utils.getDocumentsAs2dList(neo4jInsertionTimesOfEachScenario, Neo4jSingleInsertion.INSERTION_TIMES_OUTPUT_PATH);
+//			List<Double> neo4jMeanInsertionTimes = utils.calculateMeanList(neo4jInsertionTimesOfEachScenario);
+//			utils.writeTimes(neo4jMeanInsertionTimes, Neo4jSingleInsertion.INSERTION_TIMES_OUTPUT_PATH);
+//			utils.deleteMultipleFiles(Neo4jSingleInsertion.INSERTION_TIMES_OUTPUT_PATH, GraphDatabaseBenchmark.SCENARIOS);
+//		}
 		
 		if(GraphDatabaseBenchmark.SPARKSEE_SELECTED) {
 			List<List<Double>> sparkseeInsertionTimesOfEachScenario = new ArrayList<List<Double>>(GraphDatabaseBenchmark.SCENARIOS);
@@ -122,14 +122,14 @@ public class SingleInsertionBenchmark implements Benchmark {
 		titanGraphDatabase.delete(GraphDatabaseBenchmark.TITANDB_PATH);
 	}
 		
-	@SuppressWarnings("unused")
-	private void orientdbSingleInsertionBenchmark() {
-		GraphDatabase orientGraphDatabase = new OrientGraphDatabase();
-		orientGraphDatabase.createGraphForSingleLoad(GraphDatabaseBenchmark.ORIENTDB_PATH);
-		orientGraphDatabase.singleModeLoading(DATASET_PATH);
-		orientGraphDatabase.shutdown();
-		orientGraphDatabase.delete(GraphDatabaseBenchmark.ORIENTDB_PATH);
-	}
+//	@SuppressWarnings("unused")
+//	private void orientdbSingleInsertionBenchmark() {
+//		GraphDatabase orientGraphDatabase = new OrientGraphDatabase();
+//		orientGraphDatabase.createGraphForSingleLoad(GraphDatabaseBenchmark.ORIENTDB_PATH);
+//		orientGraphDatabase.singleModeLoading(DATASET_PATH);
+//		orientGraphDatabase.shutdown();
+//		orientGraphDatabase.delete(GraphDatabaseBenchmark.ORIENTDB_PATH);
+//	}
 	
 	@SuppressWarnings("unused")
 	private void neo4jSingleInsertionBenchmark() {

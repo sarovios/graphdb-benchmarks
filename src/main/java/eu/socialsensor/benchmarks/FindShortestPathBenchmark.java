@@ -2,7 +2,7 @@ package eu.socialsensor.benchmarks;
 
 import eu.socialsensor.graphdatabases.GraphDatabase;
 import eu.socialsensor.graphdatabases.Neo4jGraphDatabase;
-import eu.socialsensor.graphdatabases.OrientGraphDatabase;
+//import eu.socialsensor.graphdatabases.OrientGraphDatabase;
 import eu.socialsensor.graphdatabases.SparkseeGraphDatabase;
 import eu.socialsensor.graphdatabases.TitanGraphDatabase;
 import eu.socialsensor.main.GraphDatabaseBenchmark;
@@ -79,17 +79,17 @@ public class FindShortestPathBenchmark implements Benchmark {
 				"Find Shortest Path");
 	}
 	
-	@SuppressWarnings("unused")
-	private void orientdbFindShortestPathBenchmark() {
-		GraphDatabase orientGraphDatabase = new OrientGraphDatabase();
-		orientGraphDatabase.open(GraphDatabaseBenchmark.ORIENTDB_PATH);
-		long start = System.currentTimeMillis();
-		orientGraphDatabase.shorestPathQuery();
-		long orientTime = System.currentTimeMillis() - start;
-		orientGraphDatabase.shutdown();
-		orientTimes[orientScenarioCount] = orientTime / 1000.0;
-		orientScenarioCount++;
-	}
+//	@SuppressWarnings("unused")
+//	private void orientdbFindShortestPathBenchmark() {
+//		GraphDatabase orientGraphDatabase = new OrientGraphDatabase();
+//		orientGraphDatabase.open(GraphDatabaseBenchmark.ORIENTDB_PATH);
+//		long start = System.currentTimeMillis();
+//		orientGraphDatabase.shorestPathQuery();
+//		long orientTime = System.currentTimeMillis() - start;
+//		orientGraphDatabase.shutdown();
+//		orientTimes[orientScenarioCount] = orientTime / 1000.0;
+//		orientScenarioCount++;
+//	}
 	
 	@SuppressWarnings("unused")
 	private void titanFindShortestPathBenchmark() {
@@ -138,10 +138,10 @@ public class FindShortestPathBenchmark implements Benchmark {
 			graphDatabase = new TitanGraphDatabase();
 			graphDatabase.open(GraphDatabaseBenchmark.TITANDB_PATH);
 		}
-		else if(GraphDatabaseBenchmark.ORIENTDB_SELECTED) {
-			graphDatabase = new OrientGraphDatabase();
-			graphDatabase.open(GraphDatabaseBenchmark.ORIENTDB_PATH);
-		}
+//		else if(GraphDatabaseBenchmark.ORIENTDB_SELECTED) {
+//			graphDatabase = new OrientGraphDatabase();
+//			graphDatabase.open(GraphDatabaseBenchmark.ORIENTDB_PATH);
+//		}
 		else if(GraphDatabaseBenchmark.NEO4J_SELECTED) {
 			graphDatabase = new Neo4jGraphDatabase();
 			graphDatabase.open(GraphDatabaseBenchmark.NEO4JDB_PATH);

@@ -2,7 +2,7 @@ package eu.socialsensor.benchmarks;
 
 import eu.socialsensor.graphdatabases.GraphDatabase;
 import eu.socialsensor.graphdatabases.Neo4jGraphDatabase;
-import eu.socialsensor.graphdatabases.OrientGraphDatabase;
+//import eu.socialsensor.graphdatabases.OrientGraphDatabase;
 import eu.socialsensor.graphdatabases.SparkseeGraphDatabase;
 import eu.socialsensor.graphdatabases.TitanGraphDatabase;
 import eu.socialsensor.main.GraphDatabaseBenchmark;
@@ -80,18 +80,18 @@ public class MassiveInsertionBenchmark implements Benchmark{
 				"Massive Insertion");
 	}
 	
-	@SuppressWarnings("unused")
-	private void orientdbMassiveInsertionBenchmark() {
-		GraphDatabase orientGraphDatabase = new OrientGraphDatabase();
-		long start = System.currentTimeMillis();
-		orientGraphDatabase.createGraphForMassiveLoad(GraphDatabaseBenchmark.ORIENTDB_PATH);
-		orientGraphDatabase.massiveModeLoading(datasetDir);
-		orientGraphDatabase.shutdownMassiveGraph();
-		long orientTime = System.currentTimeMillis() - start;
-		orientGraphDatabase.delete(GraphDatabaseBenchmark.ORIENTDB_PATH);
-		orientTimes[orientScenarioCount] = orientTime / 1000.0;
-		orientScenarioCount++;
-	}
+//	@SuppressWarnings("unused")
+//	private void orientdbMassiveInsertionBenchmark() {
+//		GraphDatabase orientGraphDatabase = new OrientGraphDatabase();
+//		long start = System.currentTimeMillis();
+//		orientGraphDatabase.createGraphForMassiveLoad(GraphDatabaseBenchmark.ORIENTDB_PATH);
+//		orientGraphDatabase.massiveModeLoading(datasetDir);
+//		orientGraphDatabase.shutdownMassiveGraph();
+//		long orientTime = System.currentTimeMillis() - start;
+//		orientGraphDatabase.delete(GraphDatabaseBenchmark.ORIENTDB_PATH);
+//		orientTimes[orientScenarioCount] = orientTime / 1000.0;
+//		orientScenarioCount++;
+//	}
 
 	@SuppressWarnings("unused")
 	private void titanMassiveInsertionBenchmark() {
