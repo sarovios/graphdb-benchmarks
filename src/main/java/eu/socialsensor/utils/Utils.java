@@ -38,11 +38,6 @@ public class Utils {
 	
 	private Logger logger = Logger.getLogger(Utils.class);
 	
-	static public void main(String args[]) {
-		Utils utils = new Utils();
-		System.out.println(utils.calculateFactorial(6));
-	}
-	
 	public void getDocumentsAs2dList(List<List<Double>> data, String docPath) {
 		Utils utils = new Utils();
 		for(int i = 0; i < GraphDatabaseBenchmark.SCENARIOS; i++) {
@@ -90,7 +85,7 @@ public class Utils {
 		return Math.sqrt(var);
 	}
 	
-	public void deleteRecursively(File file ) {
+	public static void deleteRecursively(File file ) {
 		if ( !file.exists() ) {
 			return;
 		}

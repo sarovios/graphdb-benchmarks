@@ -20,7 +20,6 @@ import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.neo4j.graphdb.schema.IndexDefinition;
 import org.neo4j.graphdb.schema.Schema;
 import org.neo4j.helpers.collection.IteratorUtil;
-import org.neo4j.kernel.GraphDatabaseAPI;
 import org.neo4j.tooling.GlobalGraphOperations;
 import org.neo4j.unsafe.batchinsert.BatchInserter;
 import org.neo4j.unsafe.batchinsert.BatchInserters;
@@ -43,9 +42,9 @@ import java.util.concurrent.TimeUnit;
 @SuppressWarnings("deprecation")
 public class Neo4jGraphDatabase implements GraphDatabase {
 	
-	GraphDatabaseService neo4jGraph = null;
-	Schema schema = null;
-	IndexDefinition indexDefinition = null;
+	private GraphDatabaseService neo4jGraph = null;
+	private Schema schema = null;
+	private IndexDefinition indexDefinition = null;
 		
 	private BatchInserter inserter = null;
 		
@@ -55,17 +54,6 @@ public class Neo4jGraphDatabase implements GraphDatabase {
 	
 	public static Label NODE_LABEL = DynamicLabel.label("Node");
 	
-	public static void main(String args[]) {
-//		Neo4jGraphDatabase test = new Neo4jGraphDatabase();
-//		test.createGraphForMassiveLoad("Neo4jYoutube");
-//		test.massiveModeLoading("./data/youtubeEdges.txt");
-//		test.shutdownMassiveGraph();
-		
-//		test.open("Neo4jYoutube");
-//		test.neighborsOfAllNodesQuery();
-//		test.shutdown();
-	}
-	
 	@Override
 	public void open(String dbPath) {
 		neo4jGraph = new GraphDatabaseFactory().newEmbeddedDatabase(dbPath);		
@@ -74,21 +62,6 @@ public class Neo4jGraphDatabase implements GraphDatabase {
 			tx.success();
 			tx.close();
 		}
-//		Transaction tx = null;
-//		try {
-//			tx = ((GraphDatabaseAPI)neo4jGraph).tx().unforced().begin();
-//			neo4jGraph.schema().awaitIndexesOnline(10l, TimeUnit.MINUTES);
-//			tx.success();
-//			tx.close();
-//		}
-//		catch(Exception e) {
-//
-//		}
-//		finally {
-//			if(tx != null) {
-//				tx.close();
-//			}
-//		}
 	}
 
 	@Override

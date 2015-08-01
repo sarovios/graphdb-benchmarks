@@ -24,7 +24,8 @@ import java.util.concurrent.ExecutionException;
  *
  */
 public class GraphDatabaseBenchmark {
-	
+
+	//TODO: move to enums
 	public final static String TITAN = "titan";
 	public final static String ORIENTDB = "orientdb";
 	public final static String NEO4J = "neo4j";
